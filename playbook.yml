@@ -18,6 +18,12 @@
   - name: configure topbeat elasticsearch
     lineinfile: 'dest=/etc/topbeat/topbeat.yml regexp="hosts:.*" line="    hosts: [\"{{ es_host }}:{{ es_port }}\"]"'
 
+  - name: ensure curl is installed
+    apt: package=curl state=present update_cache=yes
+
+  - name: insert template into elasticsearch
+    shell: 'curl -s {{ es_host }}:{{ es_port }}/_template/topbeat -d @/etc/topbeat/topbeat.template.json '
+
   - name: start topbeat service
     service: name=topbeat state=started
   
