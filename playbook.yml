@@ -4,6 +4,9 @@
    packagename: topbeat_1.0.0-beta3_amd64.deb
    es_host: 127.0.0.1
    es_port: 9200
+   period: 5
+   start: true
+   autostart: false
 
   tasks:
   - name: download topbeat deb package
@@ -13,7 +16,7 @@
     apt: deb=/tmp/{{ packagename }}
 
   - name: configure topbeat interval
-    lineinfile: 'dest=/etc/topbeat/topbeat.yml "regexp=^ period:.*" line=" period: 30"'
+    lineinfile: 'dest=/etc/topbeat/topbeat.yml "regexp=^ period:.*" line=" period: {{ period }}"'
 
   - name: configure topbeat elasticsearch
     lineinfile: 'dest=/etc/topbeat/topbeat.yml regexp="hosts:.*" line="    hosts: [\"{{ es_host }}:{{ es_port }}\"]"'
@@ -26,6 +29,8 @@
 
   - name: start topbeat service
     service: name=topbeat state=started
+    when: start
   
   - name: add topbeat to autostart
     shell: update-rc.d topbeat defaults 95 10
+    when: autostart
