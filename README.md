@@ -12,5 +12,11 @@ Set the variables in `playbook.yml`:
  
 `es_port:` the port of your elasticsearch host (e.g. 9200)
 
+`period:` the period in which topbeat should send data to elasticsearch
+
+`start:` should topbeat be startet after installation (default: true)
+
+`autostart:` should topbeat be automatically started on system boot up (default: false)
+
 ## Run the playbook
 `ansible-playbook -i hosts ./playbook.yml`
