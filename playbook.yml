@@ -1,7 +1,7 @@
 ---
 - hosts: all
   vars: 
-   packagename: topbeat_1.0.0-beta3_amd64.deb
+   packagename: topbeat_1.0.0-rc1_amd64.deb
    es_host: 127.0.0.1
    es_port: 9200
    period: 5
