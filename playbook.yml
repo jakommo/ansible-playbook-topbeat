@@ -4,9 +4,10 @@
    packagename: topbeat_1.0.0-rc1_amd64.deb
    es_host: 127.0.0.1
    es_port: 9200
-   period: 5
+   period: 30
    start: true
-   autostart: false
+   autostart: true
+   install_template: false
 
   tasks:
   - name: download topbeat deb package
@@ -23,9 +24,11 @@
 
   - name: ensure curl is installed
     apt: package=curl state=present update_cache=yes
+    when: install_template
 
   - name: insert template into elasticsearch
     shell: 'curl -s {{ es_host }}:{{ es_port }}/_template/topbeat -d @/etc/topbeat/topbeat.template.json '
+    when: install_template 
 
   - name: start topbeat service
     service: name=topbeat state=started
