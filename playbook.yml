@@ -10,17 +10,20 @@
    install_template: false
 
   tasks:
-  - name: download topbeat deb package
-    get_url: url=https://download.elasticsearch.org/beats/topbeat/{{ packagename }} dest=/tmp/{{ packagename }}
+  - name: add elastic repo key
+    apt_key: url=https://packages.elasticsearch.org/GPG-KEY-elasticsearch state=present
 
-  - name: install topbeat deb package
-    apt: deb=/tmp/{{ packagename }}
+  - name: add beats repository
+    apt_repository: repo='deb https://packages.elastic.co/beats/apt stable main' state=present
+            
+  - name: install topbeat
+    apt: pkg=topbeat state=present update_cache=yes
 
   - name: configure topbeat interval
-    lineinfile: 'dest=/etc/topbeat/topbeat.yml "regexp=^ period:.*" line=" period: {{ period }}"'
+    lineinfile: 'dest=/etc/topbeat/topbeat.yml "regexp=^  period:.*" line="  period: {{ period }}"'
 
   - name: configure topbeat elasticsearch
-    lineinfile: 'dest=/etc/topbeat/topbeat.yml regexp="hosts:.*" line="    hosts: [\"{{ es_host }}:{{ es_port }}\"]"'
+    lineinfile: 'dest=/etc/topbeat/topbeat.yml regexp="^    hosts:.*" line="    hosts: [\"{{ es_host }}:{{ es_port }}\"]"'
 
   - name: ensure curl is installed
     apt: package=curl state=present update_cache=yes
